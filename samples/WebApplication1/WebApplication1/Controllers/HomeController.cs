@@ -1,21 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using WebApplication1.Models;
+using Microsoft.Extensions.Localization;
+using WebApplication1.Models.ViewModels;
+using WebApplication1.Resources;
 
 namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(
+            ILogger<HomeController> logger, 
+            IStringLocalizer<SharedResource> localizer)
         {
             _logger = logger;
+            _localizer = localizer;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(new HomeViewModel { Welcome = _localizer["Welcome"] });
         }
 
         public IActionResult Privacy()

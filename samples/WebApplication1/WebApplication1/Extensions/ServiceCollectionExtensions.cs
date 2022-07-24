@@ -7,7 +7,7 @@ namespace WebApplication1.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddWebOptimizer(this IServiceCollection collection, IWebHostEnvironment environment)
+    public static void RegisterWebOptimizer(this IServiceCollection collection, IWebHostEnvironment environment)
     {
         var isDevelopment = environment.IsDevelopment();
         var cssSettings = isDevelopment ? CssSettings.Pretty() : new CssSettings();
@@ -20,7 +20,7 @@ public static class ServiceCollectionExtensions
         });
     }
 
-    public static void AddServicesByScanning(this IServiceCollection collection, Assembly assembly)
+    public static void RegisterServices(this IServiceCollection collection, Assembly assembly)
     {
         var types = assembly.GetTypes();
         bool Filter(Type t) => t.IsDefined(typeof(ServiceAttribute)) && t.IsClass && !t.IsAbstract;
