@@ -1,6 +1,8 @@
+using System.Reflection;
 using WebApplication1.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddServicesByScanning(Assembly.GetExecutingAssembly());
 builder.Services.AddWebOptimizer(builder.Environment);
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
