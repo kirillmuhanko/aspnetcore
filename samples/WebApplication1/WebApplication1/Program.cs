@@ -1,12 +1,16 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Razor;
 using WebApplication1.Extensions;
+using WebApplication1.Models.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.ConfigureRequestLocalizationOptions();
 builder.Services.RegisterServices(Assembly.GetExecutingAssembly());
 builder.Services.RegisterWebOptimizer(builder.Environment);
+
 builder.Services.AddLocalization();
+builder.Services.Configure<SystemOptions>(builder.Configuration.GetSection(SystemOptions.SectionName));
+
 builder.Services.AddControllersWithViews()    
     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     .AddDataAnnotationsLocalization();

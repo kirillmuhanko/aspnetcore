@@ -26,27 +26,26 @@ public static class ServiceCollectionExtensions
         bool Filter(Type t) => t.IsDefined(typeof(ServiceAttribute)) && t.IsClass && !t.IsAbstract;
         var implementations = types.Where(Filter).ToList();
 
-        implementations.ForEach(t =>
+        implementations.ForEach(i =>
         {
-            var attribute = t.GetCustomAttribute<ServiceAttribute>();
-            var contract = t.GetInterfaces().FirstOrDefault();
+            var attribute = i.GetCustomAttribute<ServiceAttribute>();
+            var contracts = i.GetInterfaces().Where(t => t != typeof(IDisposable)).ToList();
 
-            if (contract == null)
-                throw new ApplicationException($"The {t.Name} class must implement the interface.");
-
-            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-            switch (attribute?.Lifetime)
+            contracts.ForEach(c =>
             {
-                case ServiceLifetime.Scoped:
-                    collection.AddScoped(contract, t);
-                    break;
-                case ServiceLifetime.Transient:
-                    collection.AddTransient(contract, t);
-                    break;
-                default:
-                    collection.AddSingleton(contract, t);
-                    break;
-            }
+                switch (attribute?.Lifetime)
+                {
+                    case ServiceLifetime.Transient:
+                        collection.AddTransient(c, i);
+                        break;
+                    case ServiceLifetime.Scoped:
+                        collection.AddScoped(c, i);
+                        break;
+                    default:
+                        collection.AddSingleton(c, i);
+                        break;
+                }
+            });
         });
     }
 }

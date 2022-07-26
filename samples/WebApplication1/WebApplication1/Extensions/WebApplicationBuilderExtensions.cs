@@ -8,11 +8,10 @@ public static class WebApplicationBuilderExtensions
 {
     public static void ConfigureRequestLocalizationOptions(this WebApplicationBuilder builder)
     {
-        builder.Services.Configure<CultureOptions>(builder.Configuration.GetSection(CultureOptions.Config));
-        var options = new CultureOptions();
-        builder.Configuration.GetSection(CultureOptions.Config).Bind(options);
-        var supportedCultures = options.Names.Select(t => new CultureInfo(t)).ToList();
-        var defaultCulture = supportedCultures.First();
+        var options = new SystemOptions();
+        builder.Configuration.GetSection(SystemOptions.SectionName).Bind(options);
+        var supportedCultures = options.SupportedCultures.Select(CultureInfo.GetCultureInfo).ToList();
+        var defaultCulture = supportedCultures.FirstOrDefault() ?? new CultureInfo("en-US");
 
         builder.Services.Configure<RequestLocalizationOptions>(t =>
         {
