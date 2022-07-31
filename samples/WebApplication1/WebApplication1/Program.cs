@@ -11,6 +11,9 @@ builder.Services.RegisterWebOptimizer(builder.Environment);
 builder.Services.AddLocalization();
 builder.Services.Configure<SystemOptions>(builder.Configuration.GetSection(SystemOptions.SectionName));
 
+builder.Services.Configure<TokenOptions>(
+    builder.Configuration.GetSection($"{SecurityOptions.SectionName}:{TokenOptions.SectionName}"));
+
 builder.Services.AddControllersWithViews()    
     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     .AddDataAnnotationsLocalization();
